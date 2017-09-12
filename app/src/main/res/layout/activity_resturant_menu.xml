@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.vanne.tradish_alpha.Menus.RestaurantMenu">
+
+    <TextView
+        android:id="@+id/userIdentity"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/restMenuEdit"
+        android:layout_alignParentBottom="false"
+        android:background="@color/colorPrimary"
+        android:elegantTextHeight="true"
+        android:gravity="center_horizontal"
+        android:textColor="?attr/colorBackgroundFloating"
+        android:textSize="20sp" />
+
+    <ListView
+        android:id="@+id/restMenuEdit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

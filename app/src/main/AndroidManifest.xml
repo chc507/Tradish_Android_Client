@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.vanne.tradish_alpha">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:name=".Applications.StarterApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".Menus.CustomerMenu" />
+        <activity android:name=".Menus.RestaurantMenu" />
+        <activity android:name=".OwnerActivity.OrderListActivity" />
+        <activity android:name=".OwnerActivity.DeliveryScheduleActivity" />
+        <activity android:name=".CustomerActivity.CustomerActivity" />
+        <activity android:name=".CustomerActivity.CartActivities.ViewCartActivity" />
+        <activity android:name=".CustomerActivity.CartActivities.ShoppingCartActivity" />
+        <activity android:name=".CustomerActivity.Tracking.TrackingActivity" />
+        <activity android:name=".CustomerActivity.MenuActivities.MenusDetailActivity" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyC-zNMiFP4WtC5rKWq9nkQzT3SNpq55WaU" />
+
+        <activity android:name=".Menus.DriverMenu" />
+        <activity android:name=".DriverActivities.DriverActivity" />
+
+        <service
+            android:name=".Service.LocationService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".Service.DummyLocationService"
+            android:enabled="true"
+            android:exported="true"
+            android:label="Dummy Location service" />
+
+        <activity android:name=".DriverActivities.DeliveryOrderListActivity" />
+        <activity android:name=".NavigationMenu" />
+        <activity android:name=".LoginAndSignup.LoginSignupActivity" />
+        <activity android:name=".LoginAndSignup.ProfileActivity" />
+        <activity android:name=".CustomerActivity.ResturantList.RestaurantListActivity" />
+        <activity android:name=".CustomerActivity.ResturantList.RestaurantDetailActivity"></activity>
+    </application>
+
+</manifest>

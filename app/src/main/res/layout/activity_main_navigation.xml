@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Main1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/m1image"
+    tools:context="com.example.vanne.tradish_alpha.MainActivity">
+
+    <Button
+        android:id="@+id/Rest_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="70dp"
+        android:contentDescription="This is for resturant drivers and owners"
+        android:onClick="navigateToResturant"
+        android:text="Resturant"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/Custom_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/Rest_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:contentDescription="This is for customers"
+        android:onClick="navigateToCustomer"
+        android:text="Customer" />
+
+    <Button
+        android:id="@+id/Driver_Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="This is for customers"
+        android:onClick="navigateToDriver"
+        android:text="Driver"
+        android:layout_above="@+id/Custom_Button"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="18dp" />
+</RelativeLayout>

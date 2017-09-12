@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="Confirm" android:id="@+id/confirm"></item>
+    <item android:title="Leave" android:id="@+id/leave"></item>
+</menu>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/backgroundRelativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:onClick="changeImage"
+    tools:context="com.example.vanne.tradish_alpha.LoginAndSignup.ProfileActivity">
+
+
+    <ImageView
+        android:id="@+id/profileImageView"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:layout_marginTop="25dp"
+        app:srcCompat="@drawable/add_contacts_icon"
+        android:layout_below="@+id/usernameEditText"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/nickname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/profileImageView"
+        android:layout_marginStart="61dp"
+        android:layout_marginTop="30dp"
+        android:text="Nickname:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+    <TextView
+        android:id="@+id/address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/nickname"
+        android:layout_below="@+id/nickname"
+        android:layout_marginTop="21dp"
+        android:text="Address:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+    <TextView
+        android:id="@+id/email"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/address"
+        android:layout_below="@+id/address"
+        android:layout_marginTop="20dp"
+        android:text="Email:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+    <TextView
+        android:id="@+id/phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/email"
+        android:layout_below="@+id/email"
+        android:layout_marginTop="20dp"
+        android:text="Number:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+
+    <EditText
+        android:id="@+id/nicknameEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/nickname"
+        android:layout_alignBottom="@+id/nickname"
+        android:layout_alignEnd="@+id/profileImageView"
+        android:hint="Enter your nickname"
+        android:digits="abcdefghijklmnopqrstuvwxyz0123456789@_,./{} "
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/addressEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/address"
+        android:layout_alignBottom="@+id/address"
+        android:layout_alignStart="@+id/nicknameEditText"
+        android:hint="Enter your address"
+        android:digits="abcdefghijklmnopqrstuvwxyz0123456789@_,./{} "
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/phoneEditText"
+        android:layout_alignStart="@+id/addressEditText"
+        android:hint="Enter your email"
+        android:inputType="textEmailAddress"
+        android:digits="abcdefghijklmnopqrstuvwxyz0123456789@_,./{} "
+        android:textSize="14sp" />
+
+    <EditText
+        android:id="@+id/phoneEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/phone"
+        android:layout_alignBottom="@+id/phone"
+        android:layout_alignStart="@+id/emailEditText"
+        android:hint="Enter your phone number"
+        android:inputType="number|phone"
+        android:digits="0123456789+*#"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/usernameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="25dp"
+        android:gravity="center_horizontal"
+        android:text="Username: "
+        android:textSize="20sp" />
+
+    <Button
+        android:id="@+id/savechanges"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="27dp"
+        android:onClick="onClick"
+        android:text="Save Changes" />
+
+    <ImageView
+        android:id="@+id/identityImageView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_alignBottom="@+id/savechanges"
+        android:layout_alignEnd="@+id/phone"
+        android:layout_alignTop="@+id/savechanges"
+        app:srcCompat="@drawable/question_sign_icon" />
+
+</RelativeLayout>

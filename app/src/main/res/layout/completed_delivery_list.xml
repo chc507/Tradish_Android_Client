@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark">
+
+    <com.example.vanne.tradish_alpha.Layout.CheckableRelativeLayout
+        android:id="@+id/Selected"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="1"
+        android:orientation="vertical"
+        android:padding="6dp">
+
+        <TextView
+            android:id="@+id/orderId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:alpha="1"
+            android:padding="2dp"
+            android:text="OrderId"
+            android:textColor="@color/cast_expanded_controller_progress_text_color"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/sequence"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/options"
+            android:layout_alignParentEnd="true"
+            android:padding="2dp"
+            android:textColor="@color/cast_expanded_controller_progress_text_color"
+            android:textColorLink="@color/cast_expanded_controller_background_color"
+            android:textSize="14sp"
+            tools:text="address" />
+
+    </com.example.vanne.tradish_alpha.Layout.CheckableRelativeLayout>
+</LinearLayout>
