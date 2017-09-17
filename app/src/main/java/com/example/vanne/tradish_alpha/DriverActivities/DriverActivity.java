@@ -402,6 +402,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         Log.e(DriverActivityTag, "In Put Request: " + error.toString());
+                        Log.e(DriverActivityTag, "JSON BUILDER" + singleOrderStatusJsonBuilder(deliveryOrderModel));
                         Toast.makeText(getApplicationContext(), "Fail to update status, please try again", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -410,7 +411,6 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
             protected Map<String, String> getParams()
             {
                 String jsonStatus;
-                Map<String, String>  params = new HashMap<String, String> ();
                 if (deliveryOrderModel == null) { //update all the orders
                     jsonStatus = statusJsonBuilder();
                     Log.e(DriverActivityTag, jsonStatus);
@@ -419,7 +419,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
                     jsonStatus = singleOrderStatusJsonBuilder(deliveryOrderModel);
                     Log.e(DriverActivityTag, jsonStatus);
                 }
-                Log.e("status update", jsonStatus);
+                Map<String, String>  params = new HashMap<String, String> ();
                 params.put("delivery_update" + DeliveryId, jsonStatus);//Incompleted, Completed, Delivery in progress
                 return params;
             }
