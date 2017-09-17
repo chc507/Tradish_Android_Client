@@ -1,63 +1,54 @@
 package com.example.vanne.tradish_alpha.DriverActivities;
 
 import android.app.Fragment;
-        import android.app.FragmentManager;
-        import android.app.FragmentTransaction;
-        import android.app.ProgressDialog;
-        import android.content.BroadcastReceiver;
-        import android.content.ComponentName;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.IntentFilter;
-        import android.content.ServiceConnection;
-        import android.content.pm.PackageManager;
-        import android.location.Address;
-        import android.location.Geocoder;
-        import android.location.LocationManager;
-        import android.os.Build;
-        import android.os.IBinder;
-        import android.support.v4.app.ActivityCompat;
-        import android.support.v4.content.ContextCompat;
-        import android.support.v7.app.AppCompatActivity;
-        import android.os.Bundle;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuInflater;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.AdapterView;
-        import android.widget.Button;
-        import android.widget.ListView;
-        import android.widget.TextView;
-        import android.widget.Toast;
-
-        import com.android.volley.DefaultRetryPolicy;
-        import com.android.volley.Request;
-        import com.android.volley.RequestQueue;
-        import com.android.volley.Response;
-        import com.android.volley.RetryPolicy;
-        import com.android.volley.VolleyError;
-        import com.android.volley.toolbox.StringRequest;
-        import com.android.volley.toolbox.Volley;
-        import com.android.volley.TimeoutError;
-        import com.example.vanne.tradish_alpha.Adapters.DriverAdapters.CompletedListViewAdapter;
-        import com.example.vanne.tradish_alpha.Adapters.DriverAdapters.IncompletedListViewAdapter;
-        import com.example.vanne.tradish_alpha.Fragments.driverMapFragment;
-        import com.example.vanne.tradish_alpha.MainActivity;
-        import com.example.vanne.tradish_alpha.Manifest;
-        import com.example.vanne.tradish_alpha.Models.DeliveryOrderModel;
-        import com.example.vanne.tradish_alpha.R;
-        import com.example.vanne.tradish_alpha.Service.DummyLocationService;
-        import com.example.vanne.tradish_alpha.Service.GetLocationService;
-        import com.google.android.gms.maps.model.LatLng;
-
-        import org.json.JSONArray;
-
-        import java.io.IOException;
-        import java.util.ArrayList;
-        import java.util.HashMap;
-        import java.util.List;
-        import java.util.Map;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Build;
+import android.os.IBinder;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.RetryPolicy;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+import com.example.vanne.tradish_alpha.Adapters.DriverAdapters.CompletedListViewAdapter;
+import com.example.vanne.tradish_alpha.Adapters.DriverAdapters.IncompletedListViewAdapter;
+import com.example.vanne.tradish_alpha.Fragments.driverMapFragment;
+import com.example.vanne.tradish_alpha.MainActivity;
+import com.example.vanne.tradish_alpha.Models.DeliveryOrderModel;
+import com.example.vanne.tradish_alpha.R;
+import com.example.vanne.tradish_alpha.Service.LocationService;
+import com.google.android.gms.maps.model.LatLng;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DriverActivity extends AppCompatActivity implements ServiceConnection{
     /*Buttons for showing and getting the locations*/
@@ -65,9 +56,8 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
     Button btnShowLocation;
 
     /*All the services */
-    GetLocationService getLocationService;
     boolean isSeriviceStarted;
-    DummyLocationService dummyLocationService;
+    LocationService locationService;
     LatLng currentLoc;
 
     /*Lat Lng View*/
@@ -81,13 +71,13 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
 
     static MyReceiver myReceiver;
     IntentFilter filter;
+
     /*The delivery list from the previous intent*/
     private ArrayList<DeliveryOrderModel> incompletedList;
     private ArrayList<DeliveryOrderModel> completedList;
     /*List views for incompleted and completed lists*/
     private ListView incompletedView;
     private ListView completedView;
-
 
     /*Adapters for incompleted and completed lists*/
     private IncompletedListViewAdapter incompletedListAdapter;
@@ -116,7 +106,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         switch (item.getItemId()) {
             case R.id.updateStatus:
                 /*a put request*/
-                volleyPutRequest(Volley_Put_Request_URL);
+                volleyPutRequest(Volley_Put_Request_URL, null);
                 return true;
             case R.id.BacktoMain:
                 /*send out the rest id to get drivers*/
@@ -175,7 +165,11 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         incompletedView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             @Override
             public void onItemClick(AdapterView<?>parent, View view, int position, long id){
+
+
+                incompletedList.get(position).setStatusCode(2);
                 completedList.add(incompletedList.get(position));
+                volleyPutRequest(Volley_Put_Request_URL, incompletedList.get(position));
                 incompletedList.remove(position);
                 updateListView();
             }
@@ -184,6 +178,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         completedView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener(){
             @Override
             public boolean onItemLongClick(AdapterView<?>parent, View view, int position, long id){
+                completedList.get(position).setStatusCode(1);
                 incompletedList.add(completedList.get(position));
                 completedList.remove(position);
                 updateListView();
@@ -200,7 +195,6 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
 
     public void changeFragment(View view){
         Fragment fragment;
-        //fragment = new DeliveryFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("incompletedList", incompletedList);
         if(layoutIs == "map") {
@@ -223,7 +217,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
     @Override
     protected void onResume(){
         super.onResume();
-        Intent intent = new Intent(this, DummyLocationService.class);
+        Intent intent = new Intent(this, LocationService.class);
         bindService(intent, this, Context.BIND_AUTO_CREATE);
     }
 
@@ -235,29 +229,29 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
 
     @Override
     public void onServiceConnected(ComponentName name, IBinder binder) {
-        DummyLocationService.LocationBinder b = (DummyLocationService.LocationBinder) binder;
-        dummyLocationService = b.getService();
+        LocationService.LocationBinder b = (LocationService.LocationBinder) binder;
+        locationService = b.getService();
         Toast.makeText(DriverActivity.this, "Location service is online", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onServiceDisconnected(ComponentName name) {
-        dummyLocationService = null;
+        locationService = null;
     }
 
 
     public void onClick(View view){
         if (Build.VERSION.SDK_INT < 23) {
-            Intent LocationService = new Intent(getApplicationContext(), dummyLocationService.getClass());
+            Intent LocationService = new Intent(getApplicationContext(), locationService.getClass());
             if(!isSeriviceStarted) {
                 this.registerReceiver(myReceiver, filter);
-                dummyLocationService.startService();
+                locationService.startService();
                 getApplicationContext().startService(LocationService);
                 btnGetLocation.setText("End Service");
                 isSeriviceStarted  = true;
             }else{
-                dummyLocationService.stopService();
-                dummyLocationService.onDestroy();
+                locationService.stopService();
+                locationService.onDestroy();
                 this.unregisterReceiver(myReceiver);
                 Log.i("INFO", "service destroy");
                 btnGetLocation.setText("Start Service");
@@ -270,15 +264,15 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
             } else {
                 // we have permission!
                 myReceiver = new MyReceiver();
-                Intent LocationService = new Intent(getApplicationContext(), dummyLocationService.getClass());
+                Intent LocationService = new Intent(getApplicationContext(), locationService.getClass());
                 if(!isSeriviceStarted) {
-                    dummyLocationService.startService();
+                    locationService.startService();
                     getApplicationContext().startService(LocationService);
                     btnGetLocation.setText("End Service");
                     isSeriviceStarted  = true;
                 }else{
-                    dummyLocationService.stopService();
-                    dummyLocationService.onDestroy();
+                    locationService.stopService();
+                    locationService.onDestroy();
                     Log.i("INFO", "service destroy");
                     btnGetLocation.setText("Start Service");
                     isSeriviceStarted = false;
@@ -380,7 +374,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         public void onReceive(Context context, Intent intent){
             currentLoc = intent.getParcelableExtra("LatLng");
             latLngTextView.setText(currentLoc.toString());
-            //Get estimate time of arrival from server as well.
+
             double lat = currentLoc.latitude;
             double lng = currentLoc.longitude;
 
@@ -393,7 +387,7 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         }
     }
 
-    public void volleyPutRequest(String url){
+    public void volleyPutRequest(String url, final DeliveryOrderModel deliveryOrderModel){
         StringRequest putRequest = new StringRequest(Request.Method.PUT, url,
                 new Response.Listener<String>()
                 {
@@ -415,8 +409,16 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
             @Override
             protected Map<String, String> getParams()
             {
+                String jsonStatus;
                 Map<String, String>  params = new HashMap<String, String> ();
-                String jsonStatus = statusJsonBuilder();
+                if (deliveryOrderModel == null) { //update all the orders
+                    jsonStatus = statusJsonBuilder();
+                    Log.e(DriverActivityTag, jsonStatus);
+                }
+                else {
+                    jsonStatus = singleOrderStatusJsonBuilder(deliveryOrderModel);
+                    Log.e(DriverActivityTag, jsonStatus);
+                }
                 Log.e("status update", jsonStatus);
                 params.put("delivery_update" + DeliveryId, jsonStatus);//Incompleted, Completed, Delivery in progress
                 return params;
@@ -426,9 +428,10 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         requestQueue.add(putRequest);
     }
 
+    /* All status update */
+
     public String statusJsonBuilder(){
         String jsonStatus = "[";
-        /*Build up the status update for completed list*/
         jsonStatus += "{" + "\"completed\":" + "[";
         for(int i = 0; i < completedList.size(); i++){
             jsonStatus += "{" +
@@ -439,7 +442,6 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
         }
         jsonStatus += "]" + "}" + ",";
         jsonStatus += "{" + "\"incompleted\":" + "[";
-        /*Builder up the status update for incompleted list*/
         for(int i = 0; i < incompletedList.size(); i++){
             jsonStatus += "{" +
                     "\"order_ID\":" + incompletedList.get(i).getOrderIdView() + "," +
@@ -448,6 +450,17 @@ public class DriverActivity extends AppCompatActivity implements ServiceConnecti
             if(i != incompletedList.size() - 1 ) jsonStatus += ",";
         }
         jsonStatus += "]" + "}";
+        return jsonStatus;
+    }
+
+
+    public String singleOrderStatusJsonBuilder(DeliveryOrderModel deliveryOrderModel){
+        String jsonStatus = "[";
+        /*Build up the status update for completed list*/
+        jsonStatus += "{" +
+                "\"order_ID\":" + deliveryOrderModel.getOrderIdView() + "," +
+                "\"status\":" + deliveryOrderModel.getStatusCode()  +
+                "}";
         return jsonStatus;
     }
 }

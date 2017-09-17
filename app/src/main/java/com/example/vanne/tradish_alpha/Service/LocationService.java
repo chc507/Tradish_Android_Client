@@ -1,16 +1,13 @@
 package com.example.vanne.tradish_alpha.Service;
 
-import android.app.AlertDialog;
-import android.app.Service;
 import android.app.Service;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.provider.Settings;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -19,11 +16,8 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.maps.model.LatLng;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -36,13 +30,13 @@ public class LocationService extends Service
 {
     private static final String TAG = "GPSTEST";
     private LocationManager mLocationManager = null;
-    private static final int LOCATION_INTERVAL =  5000;//on sec ?
-    private static final float LOCATION_DISTANCE = 10f;
+    private static final int LOCATION_INTERVAL =  20*1000;//on sec ?
+    private static final float LOCATION_DISTANCE = 0;
+    public boolean isServiceStarted;
     boolean isGPSEnabled = false;
     boolean isNetworkEnabled = false;
-    final String LOCATION_POST_URL = "http://34.208.189.14:8080/orders/postloc";
     //private LocationRequest mLocationRequest = new LocationRequest();
-
+    private final IBinder locationBinder = new LocationBinder();
 
 
     private class LocationListener implements android.location.LocationListener{
@@ -60,14 +54,13 @@ public class LocationService extends Service
             //Send my last location to server
             double lat = mLastLocation.getLatitude();
             double lng = mLastLocation.getLongitude();
-            DateFormat df = new SimpleDateFormat("h:mm a");
-            String date = df.format(Calendar.getInstance().getTime());
-            String jsonObjectLocation = "{" +
-                    "\"lat\":" + lat + "," +
-                    "\"lng\":" + lng + "," +
-                    "\"time\":" + date +
-                    "}";
-            sendLocationsToServer(LOCATION_POST_URL, jsonObjectLocation);
+
+
+            LatLng currentLatLng = new LatLng(lat,lng);
+            Intent intent = new Intent();
+            intent.setAction("Location_Intent_Broadcast");
+            intent.putExtra("LatLng", currentLatLng);
+            sendBroadcast(intent);
         }
         @Override
         public void onProviderDisabled(String provider)
@@ -91,52 +84,83 @@ public class LocationService extends Service
             new LocationListener(LocationManager.NETWORK_PROVIDER)
     };
 
+    public class LocationBinder extends Binder {
+        public LocationService getService(){
+            return LocationService.this;
+        }
+    }
+
     @Override
-    public IBinder onBind(Intent arg0)
+    public IBinder onBind(Intent intent)
     {
-        return null;
+        Log.e(TAG, "you are on bind");
+        return locationBinder;
     }
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
+        //Try to get location via GPS module
+        try {
+            if(isServiceStarted) {
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                        mLocationListeners[0]);
+            }
+        } catch (SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "gps provider does not exist " + ex.getMessage());
+        }
+        try {
+            if(isServiceStarted) {
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                        mLocationListeners[1]);
+            }
+        } catch (SecurityException ex) {
+            Log.i(TAG, "fail to request location update, ignore", ex);
+        } catch (IllegalArgumentException ex) {
+            Log.d(TAG, "network provider does not exist, " + ex.getMessage());
+        }
         return START_STICKY;
     }
     @Override
     public void onCreate()
     {
-
         Log.e(TAG, "onCreate");
 
-
+        /*set up boolean parameter*/
         initializeLocationManager();
+
         /*Debugging from GPS*/
         isGPSEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         isNetworkEnabled = mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        Log.d("debug", Boolean.toString(isGPSEnabled) + Boolean.toString(isNetworkEnabled));
+        Log.d(TAG, "GPS Provider " + Boolean.toString(isGPSEnabled) + " Network Provider " + Boolean.toString(isNetworkEnabled));
 
-        //Try to get location via GPS module
         try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[0]);
-        } catch (java.lang.SecurityException ex) {
+            if (isServiceStarted) {
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.GPS_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                        mLocationListeners[0]);
+            }
+        } catch (SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "gps provider does not exist " + ex.getMessage());
         }
-
         try {
-            mLocationManager.requestLocationUpdates(
-                    LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
-                    mLocationListeners[1]);
-        } catch (java.lang.SecurityException ex) {
+            if (isServiceStarted) {
+                mLocationManager.requestLocationUpdates(
+                        LocationManager.NETWORK_PROVIDER, LOCATION_INTERVAL, LOCATION_DISTANCE,
+                        mLocationListeners[1]);
+            }
+        } catch (SecurityException ex) {
             Log.i(TAG, "fail to request location update, ignore", ex);
         } catch (IllegalArgumentException ex) {
             Log.d(TAG, "network provider does not exist, " + ex.getMessage());
         }
-
     }
     @Override
     public void onDestroy()
@@ -159,6 +183,18 @@ public class LocationService extends Service
         if (mLocationManager == null) {
             mLocationManager = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
         }
+        isServiceStarted = false;
+        Log.d(TAG, "the service started as " + Boolean.toString(isServiceStarted));
+    }
+
+    public void stopService(){
+        isServiceStarted = false;
+        Log.d(TAG, "the service is changed to " + Boolean.toString(isServiceStarted));
+    }
+
+    public void startService(){
+        isServiceStarted = true;
+        Log.d(TAG, "the service is changed to " + Boolean.toString(isServiceStarted));
     }
 
     //dummy, will be configured later
@@ -191,23 +227,5 @@ public class LocationService extends Service
         requestQueue.add(stringRequest);
     }
 
-    /*
-    public String JsonObjectBuilder(){
-
-        String jsonArrayMessage = "[";
-        for(int i = 0; i < scheduledList.size(); i++){
-            jsonArrayMessage += "{" +
-                    "\"Order_ID\":" + scheduledList.get(i).getOrderIdView() + "," +
-                    "\"Driver_ID\":" + scheduledList.get(i).getDriverId() + "," +
-                    "\"Sequence\":" + scheduledList.get(i).getSequence() +
-                    "}";
-            if(i != scheduledList.size() - 1 ) jsonArrayMessage += ",";
-        }
-        jsonArrayMessage += "]";
-        Log.i("jsonArrayMessage", jsonArrayMessage);
-        return jsonArrayMessage;
-
-    }
-    */
-
+    //setup location settings
 }
