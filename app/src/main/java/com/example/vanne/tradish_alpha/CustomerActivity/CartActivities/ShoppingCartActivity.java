@@ -60,7 +60,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     PayPalConfiguration m_configuration;
     /*the id is the link to the paypal account, we have to create an app and get its id*/
-    String m_paypalClientId = "AfYHiloGgwg7EBTeyKRcggf8mosbFqj6KF1BmEFQVimFvoqCy3shY9V8UZHUCVML5JgcKN96D_83YXKK";
+    //String m_paypalClientId = "AfYHiloGgwg7EBTeyKRcggf8mosbFqj6KF1BmEFQVimFvoqCy3shY9V8UZHUCVML5JgcKN96D_83YXKK";
+    String m_paypalClientId = "AeQ_z6Rl4nXehrXQdKLv_UvNctXMC-CwBN3fcZI1Zlv_jNR5tm-DmzbRxN2sXg7d5kzBSC8eRsLxewfS";
     Intent m_service;
     int m_paypalRequestCode = 999; // or any number you want
 
