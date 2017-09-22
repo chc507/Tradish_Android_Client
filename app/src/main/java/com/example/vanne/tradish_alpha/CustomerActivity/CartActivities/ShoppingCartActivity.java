@@ -226,20 +226,20 @@ public class ShoppingCartActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("K:mm a,z");
         final String dateTime = sdf.format(Calendar.getInstance().getTime());
         final String orderObjectJson =
-                "{" +
-                        "\"Customer_ID\":" + custID + "," +
-                        "\"Address\":" + userAddress + "," +
-                        "\"Rest_ID\":" + RestID + "," +
-                        "\"Order_Time\":" + dateTime + "," +
-                        "\"Dish_ID\":" + dishIDArray + "," +
-                        "\"Total\":" + total +
-                        "}";
+                "{"
+                        + "\"Customer_ID\":" + custID + ","
+                        + "\"Address\":" + userAddress + ","
+                        + "\"Rest_ID\":" + RestID + ","
+                        + "\"Order_Time\":" + dateTime + ","
+                        + "\"Dish_ID\":" + dishIDArray + ","
+                        + "\"Total\":" + total
+                        + "}";
 
         Log.e(ShoppingTag, "Order json array " + orderObjectJson);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, POST_URL,
                 new Response.Listener<String>() {
                     @Override
-                    public void onResponse(String Response) {
+                    public void onResponse(String Respose) {
                         Toast.makeText(ShoppingCartActivity.this, "Order was successfully sent to server", Toast.LENGTH_SHORT).show();
                         /*Go to tracking activity*/
                         Intent intent = new Intent(ShoppingCartActivity.this, TrackingActivity.class);
