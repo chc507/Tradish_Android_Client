@@ -265,7 +265,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
 
 
-    /*Paypal Stuff*/
+    /*Paypal Transaction*/
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         super.onActivityResult(requestCode, resultCode, data);
@@ -293,7 +293,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                         JsonArrayBuilder();
 
                         /*Send order Array to server*/
-                        //sendOrdersToServer("http://34.208.189.14:8080/menus/getmenus?key=1");
                         sendOrdersToServer(POST_URL);
                     }
                     else
