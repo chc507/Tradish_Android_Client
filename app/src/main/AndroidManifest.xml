@@ -50,7 +50,8 @@
         <activity android:name=".LoginAndSignup.LoginSignupActivity" />
         <activity android:name=".LoginAndSignup.ProfileActivity" />
         <activity android:name=".CustomerActivity.ResturantList.RestaurantListActivity" />
-        <activity android:name=".CustomerActivity.ResturantList.RestaurantDetailActivity"></activity>
+        <activity android:name=".CustomerActivity.ResturantList.RestaurantDetailActivity" />
+        <activity android:name=".CustomerActivity.Order_History"></activity>
     </application>
 
 </manifest>

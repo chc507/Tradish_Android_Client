@@ -85,6 +85,8 @@ public class TrackingActivity extends AppCompatActivity {
         etaTextView = (TextView)findViewById(R.id.etaTextView);
 
         cart = StarterApplication.getShoppingCart();
+        Log.e("Trackign cart size", Integer.toString(cart.getSize()));
+
 
         /*Getting the cart view*/
         LinearLayout cartLayout = (LinearLayout) findViewById(R.id.cart);
@@ -141,9 +143,12 @@ public class TrackingActivity extends AppCompatActivity {
     }
 
     public void updateTime(View view){
-        volleyStringRequest(GET_URL);
+        if (cart.getSize() >0 ) {
+            volleyStringRequest(GET_URL);
+        } else {
+            Toast.makeText(getApplicationContext(), "You haven't order anything yet", Toast.LENGTH_SHORT).show();
+        }
     }
-
     public void volleyStringRequest(String url) {
         final String REQUEST_TAG = "In Cust Activity, Getting Array";
         progressDialog.setMessage("Refreshing Orders...");
