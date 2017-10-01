@@ -214,20 +214,14 @@ public class LoginSignupActivity extends AppCompatActivity implements View.OnCli
 
         /*Assign user id by making query of identities and putting the largest integer for latest user*/
         ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.whereEqualTo("Identity", identity);
+        //query.whereEqualTo("Identity", identity);
         query.orderByDescending("UserID");
         query.findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if(e == null && objects != null){
                     Log.e(LoginTag, "Retrived " + objects.size() + " objects");
-                    if(objects.size() > 0){
-                        maxUserID = objects.size();
-                        Log.e(LoginTag, "The max user id is " + maxUserID);
-                    }else if(objects.size() == 0){
-                        maxUserID = objects.size();
-                        Log.e(LoginTag, "The max user id is " + maxUserID);
-                    }
+                    maxUserID = objects.size();
                 }
             }
         });

@@ -71,7 +71,13 @@ public class RestaurantListActivity extends AppCompatActivity {
                     clearListView();
                     if(objects.size() > 0){
                         for(int i = 0; i < objects.size(); i++){
-                            final String name = objects.get(i).get("Nickname").toString();
+                            //get Nickname is possible
+                            final String name;
+                            if (objects.get(i).get("Nickname") != null) {
+                                name = objects.get(i).get("Nickname").toString();
+                            } else {
+                                name = "";
+                            }
                             final String address = objects.get(i).get("Identity").toString();
                             final int restId = (int)objects.get(i).get("UserID");
                             ParseFile file = (ParseFile)objects.get(i).get("Image");
