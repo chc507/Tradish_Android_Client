@@ -51,7 +51,6 @@ public class RestaurantListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 RestaurantModel restaurantModel = restaurantModels.get(i);
-                //Intent intent = new Intent(RestaurantListActivity.this, RestaurantDetailActivity.class);
                 Intent intent = new Intent(RestaurantListActivity.this, CustomerActivity.class);
                 intent.putExtra("restaurantModel", restaurantModel);
                 startActivity(intent);
@@ -67,7 +66,7 @@ public class RestaurantListActivity extends AppCompatActivity {
             @Override
             public void done(List<ParseUser> objects, ParseException e) {
                 if(e == null && objects != null){
-                    Log.i("In gettting list", Integer.toString(objects.size()));
+                    Log.e(RestListTag, Integer.toString(objects.size()));
                     clearListView();
                     if(objects.size() > 0){
                         for(int i = 0; i < objects.size(); i++){
@@ -76,7 +75,7 @@ public class RestaurantListActivity extends AppCompatActivity {
                             if (objects.get(i).get("Nickname") != null) {
                                 name = objects.get(i).get("Nickname").toString();
                             } else {
-                                name = "";
+                                name = "Unnamed";
                             }
                             final String address = objects.get(i).get("Identity").toString();
                             final int restId = (int)objects.get(i).get("UserID");
@@ -85,23 +84,24 @@ public class RestaurantListActivity extends AppCompatActivity {
                                 file.getDataInBackground(new GetDataCallback() {
                                     @Override
                                     public void done(byte[] data, ParseException e) {
-                                        if (e == null && data != null) {
-                                            restaurantModel = new RestaurantModel(name,address, restId,data);
-                                            restaurantModel.setFlag(1);
-                                            restaurantModels.add(restaurantModel);
-                                            updateListView();
-                                        } else {
-                                            restaurantModel = new RestaurantModel(name,address, restId);
-                                            restaurantModels.add(restaurantModel);
-                                            updateListView();
+                                        if (e == null) {
+                                            if (data != null && data.length != 0) {
+                                                restaurantModel = new RestaurantModel(name, address, restId, data);
+                                                restaurantModel.setFlag(1);
+                                                restaurantModels.add(restaurantModel);
+                                                updateListView();
+                                            }
                                         }
                                     }
                                 });
+                            } else {
+                                Log.e(RestListTag, "get user without image");
+                                restaurantModel = new RestaurantModel(name,address, restId);
+                                restaurantModels.add(restaurantModel);
+                                updateListView();
                             }
                         }
-                        updateListView();
-                        Log.i("In gettting list", Integer.toString(restaurantModels.size()));
-                    }else if(objects.size() == 0){
+                    }else {
                         Toast.makeText(getApplicationContext(), "No Restaurants in the system!", Toast.LENGTH_SHORT).show();
                     }
                 }

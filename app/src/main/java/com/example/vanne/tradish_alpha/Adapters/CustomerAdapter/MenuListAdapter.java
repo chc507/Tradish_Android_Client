@@ -68,8 +68,6 @@ public class MenuListAdapter extends ArrayAdapter<Menus> {
         textViewPrice.setGravity(Gravity.CENTER_HORIZONTAL);
 
         return view;
-
-
     }
 
 
