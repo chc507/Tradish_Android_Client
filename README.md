@@ -12,6 +12,14 @@ For all the inquiries, please contact the following developers.
 - Server Side: shuang@unomaha.edu 
 - Android Application: ywang01@unomaha.edu
 
+## Video Demo:
+
+
+[![Gust Demo](https://img.youtube.com/vi/0o0XblNL808/0.jpg)](https://www.youtube.com/watch?v=0o0XblNL808)
+
+
+Link: https://www.youtube.com/watch?v=0o0XblNL808
+
 
 ## Dependencies: 
 
